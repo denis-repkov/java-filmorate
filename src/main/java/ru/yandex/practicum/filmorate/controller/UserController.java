@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationExceptions;
@@ -25,7 +26,7 @@ public class UserController {
     }
 
     @PostMapping
-    public User create(@RequestBody User newUser) {
+    public User create(@Valid @RequestBody User newUser) {
         log.info("Выполнение запроса на создание пользователя " + newUser.getLogin());
         userValidation(newUser);
         newUser.setId(getNextId());
@@ -37,7 +38,7 @@ public class UserController {
     }
 
     @PutMapping
-    public User update(@RequestBody User newUser) {
+    public User update(@Valid @RequestBody User newUser) {
         log.info("Выполнение запроса на обновление пользователя " + newUser.getLogin());
         userValidation(newUser);
         User updatedUser = users.get(newUser.getId());
@@ -57,7 +58,7 @@ public class UserController {
     }
 
     private void userValidation(User newUser) {
-        if (newUser.getEmail().isEmpty()) {
+        if (newUser.getEmail() == null || newUser.getEmail().isEmpty()) {
             log.error("Пользователь не указал адрес эл.почты");
             throw new ValidationExceptions("Адрес эл.почты не указан");
         }
