@@ -13,6 +13,7 @@ import java.time.LocalDate;
 public class User {
     private int id;
     @Email(message = "Введите адрес эл.почты в корректном формате")
+    @NotBlank(message = "Адрес эл.почты не может быть пустым")
     private String email;
     @NotBlank(message = "Логин не может быть пустым")
     private String login;
