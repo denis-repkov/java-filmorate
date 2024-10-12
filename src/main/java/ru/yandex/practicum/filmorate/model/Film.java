@@ -8,11 +8,13 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Builder
 public class Film {
-    private int id;
+    private long id;
     @NotBlank(message = "Название не может быть пустым")
     private String name;
     @Size(max = 200, message = "Описание не может быть пустым")
@@ -20,5 +22,6 @@ public class Film {
     @NotNull(message = "Дата релиза не может быть пустой")
     private LocalDate releaseDate;
     @Positive(message = "Длительность не может быть отрицательной")
-    private Long duration;
+    private long duration;
+    private Set<Long> likes = new HashSet<>();
 }
