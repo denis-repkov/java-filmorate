@@ -20,7 +20,10 @@ class FilmControllerTest {
 
     @BeforeEach
     public void beforeEach() {
-        film = Film.builder().name("name").description("description").releaseDate(LocalDate.now()).build();
+        film = new Film();
+        film.setName("name");
+        film.setDescription("description");
+        film.setReleaseDate(LocalDate.now());
     }
 
     @Test
