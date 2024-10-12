@@ -9,7 +9,6 @@ import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,9 +40,6 @@ public class FilmService {
     public Film setLikeToFilm(long filmId, long userId) {
         userStorage.findUser(userId);
         Film film = findFilm(filmId);
-        if (film.getLikes() == null) {
-            film.setLikes(new HashSet<>());
-        }
         film.getLikes().add(userId);
         return film;
     }
