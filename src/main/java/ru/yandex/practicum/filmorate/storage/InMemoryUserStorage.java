@@ -55,6 +55,7 @@ public class InMemoryUserStorage implements UserStorage {
             } else {
                 updatedUser.setName(user.getLogin());
             }
+            updatedUser.setBirthday(user.getBirthday());
             return updatedUser;
         } else {
             throw new NotFoundExceptions("Пользователь не найден!");

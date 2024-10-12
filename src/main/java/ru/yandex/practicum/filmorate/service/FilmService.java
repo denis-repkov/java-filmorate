@@ -3,13 +3,13 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exception.ValidationExceptions;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,14 +40,17 @@ public class FilmService {
 
     public Film setLikeToFilm(long filmId, long userId) {
         userStorage.findUser(userId);
-        Film film = filmStorage.findFilm(filmId);
+        Film film = findFilm(filmId);
+        if (film.getLikes() == null) {
+            film.setLikes(new HashSet<>());
+        }
         film.getLikes().add(userId);
         return film;
     }
 
     public Film removeLikeToFilm(long filmId, long userId) {
         userStorage.findUser(userId);
-        Film film = filmStorage.findFilm(filmId);
+        Film film = findFilm(filmId);
         film.getLikes().remove(userId);
         return film;
     }

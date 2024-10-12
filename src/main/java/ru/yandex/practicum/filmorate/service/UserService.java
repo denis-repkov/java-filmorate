@@ -9,6 +9,8 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -76,8 +78,8 @@ public class UserService {
     }
 
     public List<User> getCommonFriends(long userId, long otherUserId) {
-        User user = userStorage.findUser(userId);
-        User otherUser = userStorage.findUser(otherUserId);
+        User user = findUser(userId);
+        User otherUser = findUser(otherUserId);
         if (user == null || otherUser == null) {
             log.error("Пользователь для получения списка общих друзей не найден");
             throw new NotFoundExceptions("Пользователь не найден");
