@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,6 +25,7 @@ class FilmControllerTest {
         film.setName("name");
         film.setDescription("description");
         film.setReleaseDate(LocalDate.now());
+        film.setDuration(120L);
     }
 
     @Test
@@ -57,7 +59,42 @@ class FilmControllerTest {
     @Test
     @DisplayName("Если длительность фильма меньше 0 - получаем ошибку")
     void ifDurationLessThan0Error() {
-        film.setDuration((long) -1);
+        film.setDuration(-1L);
         assertThrows(ValidationExceptions.class, () -> filmController.createFilm(film));
+    }
+
+    @Test
+    @DisplayName("Получение всех фильмов")
+    void findAllFilms() {
+        filmController.createFilm(film);
+        List<Film> films = filmController.findAllFilms();
+        assertEquals(1, films.size());
+        assertEquals(film.getName(), films.get(0).getName());
+    }
+
+    @Test
+    @DisplayName("Получение фильма по ID")
+    void findFilmById() {
+        filmController.createFilm(film);
+        Film foundFilm = filmController.findFilm(film.getId());
+        assertEquals(film.getName(), foundFilm.getName());
+    }
+
+    @Test
+    @DisplayName("Обновление фильма")
+    void updateFilm() {
+        filmController.createFilm(film);
+        film.setName("Update Name");
+        Film updatedFilm = filmController.updateFilm(film);
+        assertEquals("Update Name", updatedFilm.getName());
+    }
+
+    @Test
+    @DisplayName("Получение популярных фильмов")
+    void getPopularFilms() {
+        filmController.createFilm(film);
+        List<Film> popularFilms = filmController.getPopularFilms(10);
+        assertEquals(1, popularFilms.size());
+        assertEquals(film.getName(), popularFilms.get(0).getName());
     }
 }

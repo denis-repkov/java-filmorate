@@ -45,12 +45,8 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film updateFilm(Film film) {
         if (film != null) {
-            if (films.containsKey(film.getId())) {
-                films.put(film.getId(), film);
-                return film;
-            } else {
-                throw new NotFoundExceptions("Не удалось обновить данные - фильм не найден!");
-            }
+            films.put(film.getId(), film);
+            return film;
         } else {
             throw new ValidationExceptions("Ошибка валидации данных при обновлении фильма!");
         }

@@ -32,6 +32,9 @@ public class UserService {
     }
 
     public User updateUser(User user) {
+        if (userStorage.findUser(user.getId()) == null) {
+            throw new NotFoundExceptions("Пользователь не найден!");
+        }
         userValidation(user);
         return userStorage.updateUser(user);
     }

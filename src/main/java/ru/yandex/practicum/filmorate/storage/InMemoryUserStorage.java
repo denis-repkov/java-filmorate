@@ -46,7 +46,6 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User updateUser(User user) {
-        if (users.containsKey(user.getId())) {
             User updatedUser = users.get(user.getId());
             updatedUser.setEmail(user.getEmail());
             updatedUser.setLogin(user.getLogin());
@@ -57,8 +56,5 @@ public class InMemoryUserStorage implements UserStorage {
             }
             updatedUser.setBirthday(user.getBirthday());
             return updatedUser;
-        } else {
-            throw new NotFoundExceptions("Пользователь не найден!");
-        }
     }
 }

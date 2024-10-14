@@ -23,5 +23,5 @@ public class Film {
     private LocalDate releaseDate;
     @Positive(message = "Длительность не может быть отрицательной")
     private long duration;
-    private Set<Long> likes = new HashSet<>();
+    private Set<Long> likesFromUserIds = new HashSet<>();
 }
