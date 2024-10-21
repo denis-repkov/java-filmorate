@@ -17,36 +17,36 @@ import java.util.List;
 public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
 
     private static final String INSERT_FILM_QUERY = "INSERT INTO films " +
-            "(name, description, releaseDate, duration, mpa_rating_id) VALUES (?, ?, ?, ?, ?)";
+            "(name, description, release_date, duration, mpa_rating_id) VALUES (?, ?, ?, ?, ?)";
     private static final String UPDATE_FILM_QUERY = "UPDATE films SET name = ?, " +
             "description = ?, " +
-            "releaseDate = ?, " +
+            "release_date = ?, " +
             "duration = ?, " +
             "mpa_rating_id = ?  " +
             "WHERE film_id = ?";
-    private static final String GET_ALL_FILMS_QUERY = "SELECT f.*," +
-            "fl.liked_user_id," +
-            "fl.film_id liked_film_id," +
-            "r.rating_name," +
-            "fg.genre_id genre_id," +
-            "g.genre_name" +
+    private static final String GET_ALL_FILMS_QUERY = "SELECT f.*, " +
+            "fl.liked_user_id, " +
+            "fl.film_id liked_film_id, " +
+            "r.rating_name, " +
+            "fg.genre_id, " +
+            "g.genre_name " +
             "FROM films f " +
             "LEFT JOIN film_likes fl on f.film_id = fl.film_id " +
             "LEFT JOIN ratings r on f.mpa_rating_id = r.rating_id " +
             "LEFT JOIN films_genres fg ON f.film_id = fg.film_id " +
-            "LEFT JOIN genre g on fg.genre_id = g.genre_id ";
+            "LEFT JOIN genres g on fg.genre_id = g.genre_id ";
 
     private static final String GET_FILM_QUERY = "SELECT f.*, " +
-            "fl.liked_user_id," +
-            "fl.film_id liked_film_id," +
-            "r.rating_name," +
-            "fg.genre_id genre_id," +
-            "g.genre_name" +
+            "fl.liked_user_id, " +
+            "fl.film_id liked_film_id, " +
+            "r.rating_name, " +
+            "fg.genre_id, " +
+            "g.genre_name " +
             "FROM films f " +
             "LEFT JOIN film_likes fl on f.film_id = fl.film_id " +
             "LEFT JOIN ratings r on f.mpa_rating_id = r.rating_id " +
             "LEFT JOIN films_genres fg ON f.film_id = fg.film_id " +
-            "LEFT JOIN genre g on fg.genre_id = g.genre_id " +
+            "LEFT JOIN genres g on fg.genre_id = g.genre_id " +
             "WHERE f.film_id = ?";
     private static final String INSERT_GENRE_FILM_QUERY = "INSERT INTO films_genres (film_id, genre_id) VALUES (?, ?)";
     private static final String INSERT_LIKE_QUERY = "INSERT INTO film_likes (film_id, liked_user_id) VALUES (?, ?)";
@@ -60,7 +60,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
             "LEFT JOIN film_likes fl on f.film_id = fl.film_id " +
             "LEFT JOIN ratings r on f.mpa_rating_id = r.rating_id " +
             "LEFT JOIN films_genres fg ON f.film_id = fg.film_id " +
-            "LEFT JOIN genre g on fg.genre_id = g.genre_id " +
+            "LEFT JOIN genres g on fg.genre_id = g.genre_id " +
             "GROUP BY f.film_id, r.rating_name, fg.genre_id, g.genre_name " +
             "ORDER BY count_like DESC";
     private static final String DELETE_GENRE_TO_FILM_QUERY = "DELETE FROM films_genres WHERE film_id = ?";

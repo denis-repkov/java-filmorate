@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.model.MpaRating;
 import ru.yandex.practicum.filmorate.storage.MpaRatingStorage;
 
 import java.util.Collection;
-import java.util.Optional;
 
 @Repository
 public class MpaRatingDbStorage extends BaseRepository<MpaRating> implements MpaRatingStorage {
