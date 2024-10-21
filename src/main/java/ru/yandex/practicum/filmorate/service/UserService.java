@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundExceptions;
 import ru.yandex.practicum.filmorate.exception.ValidationExceptions;
@@ -13,10 +13,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
 public class UserService {
     private final UserStorage userStorage;
+
+    public UserService(@Qualifier("userStorage") UserStorage userStorage) {
+        this.userStorage = userStorage;
+    }
 
     public User findUser(long id) {
         return userStorage.findUser(id);
@@ -46,9 +49,8 @@ public class UserService {
             log.error("Пользователь для добавление в друзья не найден");
             throw new NotFoundExceptions("Пользователь не найден");
         }
-        log.info("Пользователи с ID {} и {} добавились друг к другу в друзья", userId, friendId);
-        user.getFriends().add(friendId);
-        friend.getFriends().add(userId);
+        log.info("Пользователь с ID {} добавил в друзья пользователя с ID {}", userId, friendId);
+        userStorage.addFriend(userId, friendId);
         return user;
     }
 
@@ -60,9 +62,8 @@ public class UserService {
             throw new NotFoundExceptions("Пользователь не найден");
         }
         if (user.getFriends() != null && friend.getFriends() != null && user.getFriends().contains(friendId)) {
-            log.info("Пользователи с ID {} и {} удалились друг у друга из друзей", userId, friendId);
-            user.getFriends().remove(friendId);
-            friend.getFriends().remove(userId);
+            log.info("Пользователи с ID {} удалил из друзей пользователя с ID {}", userId, friendId);
+            userStorage.deleteFriend(userId, friendId);
         }
         return user;
     }
@@ -85,10 +86,7 @@ public class UserService {
             log.error("Пользователь для получения списка общих друзей не найден");
             throw new NotFoundExceptions("Пользователь не найден");
         }
-        return user.getFriends().stream()
-                .filter(findUser -> otherUser.getFriends().contains(findUser))
-                .map(userStorage::findUser)
-                .collect(Collectors.toList());
+        return (List<User>) userStorage.getCommonFriends(userId, otherUserId);
     }
 
     private void userValidation(User newUser) {

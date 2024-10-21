@@ -4,14 +4,17 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(of = {"id"})
 public class Film {
     private long id;
@@ -24,4 +27,6 @@ public class Film {
     @Positive(message = "Длительность не может быть отрицательной")
     private long duration;
     private Set<Long> likesFromUserIds = new HashSet<>();
+    private MpaRating mpaRating;
+    private List<Genre> genres;
 }
