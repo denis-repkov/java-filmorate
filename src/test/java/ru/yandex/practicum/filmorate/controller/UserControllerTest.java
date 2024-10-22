@@ -3,10 +3,13 @@ package ru.yandex.practicum.filmorate.controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import ru.yandex.practicum.filmorate.exception.ValidationExceptions;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
 
@@ -14,11 +17,19 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("Тестирование контроллера пользователей")
 class UserControllerTest {
-    private UserController userController = new UserController(new UserService(new InMemoryUserStorage()));
+    @Mock
+    private UserStorage userStorage;
+
+    @InjectMocks
+    private UserService userService;
+    private UserController userController;
     private User user;
 
     @BeforeEach
     public void beforeEach() {
+        MockitoAnnotations.openMocks(this);
+        userController = new UserController(userService);
+
         user = new User();
         user.setEmail("11@email.ru");
         user.setLogin("login");
