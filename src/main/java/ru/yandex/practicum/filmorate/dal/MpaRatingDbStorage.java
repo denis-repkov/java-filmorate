@@ -25,6 +25,6 @@ public class MpaRatingDbStorage extends BaseRepository<MpaRating> implements Mpa
 
     @Override
     public MpaRating getMpaRating(Integer id) {
-        return (MpaRating) findOne(GET_MPA_ID_QUERY, id);
+        return findOne(GET_MPA_ID_QUERY, id);
     }
 }

@@ -6,11 +6,11 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import ru.yandex.practicum.filmorate.exception.DatabaseUpdateException;
+
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 public class BaseRepository<T> {
@@ -30,21 +30,21 @@ public class BaseRepository<T> {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    protected Object findOne(String query, Object... params) {
+    protected T findOne(String query, Object... params) {
         List<T> results = jdbcTemplate.query(query, mapper, params);
         if (!results.isEmpty()) {
-            return Optional.ofNullable(results.get(0));
+            return results.get(0);
         } else {
-            return Optional.empty();
+            return null;
         }
     }
 
-    protected Object findOneExtr(String query, Object... params) {
+    protected T findOneExtr(String query, Object... params) {
         List<T> results = jdbcTemplate.query(query, extractor, params);
         if (!results.isEmpty()) {
-            return Optional.ofNullable(results.get(0));
+            return results.get(0);
         } else {
-            return Optional.empty();
+            return null;
         }
     }
 

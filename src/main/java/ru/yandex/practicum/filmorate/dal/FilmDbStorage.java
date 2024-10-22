@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Repository
@@ -27,6 +28,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     private static final String GET_ALL_FILMS_QUERY = "SELECT f.*, " +
             "fl.liked_user_id, " +
             "fl.film_id liked_film_id, " +
+            "r.rating_id, " +
             "r.rating_name, " +
             "fg.genre_id, " +
             "g.genre_name " +
@@ -39,6 +41,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     private static final String GET_FILM_QUERY = "SELECT f.*, " +
             "fl.liked_user_id, " +
             "fl.film_id liked_film_id, " +
+            "r.rating_id, " +
             "r.rating_name, " +
             "fg.genre_id, " +
             "g.genre_name " +
@@ -52,6 +55,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     private static final String INSERT_LIKE_QUERY = "INSERT INTO film_likes (film_id, liked_user_id) VALUES (?, ?)";
     private static final String DELETE_LIKE_QUERY = "DELETE FROM film_likes WHERE film_id = ? AND liked_user_id = ?";
     private static final String GET_TOP_FILMS_QUERY = "SELECT f.*, " +
+            "r.rating_id, " +
             "r.rating_name, " +
             "fg.genre_id, " +
             "g.genre_name, " +
@@ -72,7 +76,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
 
     @Override
     public Film findFilm(long id) {
-        return (Film) findOneExtr(GET_FILM_QUERY, id);
+        return findOneExtr(GET_FILM_QUERY, id);
     }
 
     @Override
@@ -101,12 +105,12 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
                 film.getDescription(),
                 film.getReleaseDate().toString(),
                 film.getDuration(),
-                film.getMpaRating().getId()
+                film.getMpa() != null ? film.getMpa().getId() : 0
         );
         film.setId(id);
 
         List<Object[]> batchArgs = new ArrayList<>();
-        for (Genre genre : film.getGenres()) {
+        for (Genre genre : new HashSet<>(film.getGenres())) {
             batchArgs.add(new Object[]{film.getId(), genre.getId()});
         }
 
@@ -121,13 +125,13 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
                 newFilm.getDescription(),
                 newFilm.getReleaseDate(),
                 newFilm.getDuration(),
-                newFilm.getMpaRating().getId(),
+                newFilm.getMpa() != null ? newFilm.getMpa().getId() : 0,
                 newFilm.getId());
 
         deleteAllGenreToFilm(newFilm.getId());
 
         List<Object[]> batchArgs = new ArrayList<>();
-        for (Genre genre : newFilm.getGenres()) {
+        for (Genre genre : new HashSet<>(newFilm.getGenres())) {
             batchArgs.add(new Object[]{newFilm.getId(), genre.getId()});
         }
 

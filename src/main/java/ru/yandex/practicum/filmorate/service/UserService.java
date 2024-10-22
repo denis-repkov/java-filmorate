@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -61,7 +60,8 @@ public class UserService {
             log.error("Пользователь для удаления из друзей не найден");
             throw new NotFoundExceptions("Пользователь не найден");
         }
-        if (user.getFriends() != null && friend.getFriends() != null && user.getFriends().contains(friendId)) {
+        List<User> userFriends = userStorage.getAllFriends(userId);
+        if (userFriends != null && userFriends.stream().anyMatch(u -> u.getId() == friendId)) {
             log.info("Пользователи с ID {} удалил из друзей пользователя с ID {}", userId, friendId);
             userStorage.deleteFriend(userId, friendId);
         }
@@ -74,9 +74,7 @@ public class UserService {
             log.error("Пользователь для получения списка друзей не найден");
             throw new NotFoundExceptions("Пользователь не найден");
         }
-        return user.getFriends().stream()
-                .map(userStorage::findUser)
-                .collect(Collectors.toList());
+        return userStorage.getAllFriends(userId);
     }
 
     public List<User> getCommonFriends(long userId, long otherUserId) {

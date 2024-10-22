@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.MpaRating;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -24,9 +25,9 @@ public class FilmExtractor implements ResultSetExtractor<List<Film>> {
                 film.setId(filmId);
                 film.setName(rs.getString("name"));
                 film.setDescription(rs.getString("description"));
-                film.setReleaseDate(rs.getDate("releaseDate").toLocalDate());
+                film.setReleaseDate(rs.getDate("release_date").toLocalDate());
                 film.setDuration(rs.getInt("duration"));
-                film.setMpaRating(new MpaRating(rs.getInt("rating_id"), rs.getString("rating_name")));
+                film.setMpa(new MpaRating(rs.getInt("rating_id"), rs.getString("rating_name")));
                 film.setGenres(new ArrayList<>());
                 filmMap.put(filmId, film);
             }

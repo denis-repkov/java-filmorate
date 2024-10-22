@@ -29,8 +29,8 @@ public class FilmService {
     private final GenreStorage genreStorage;
 
     @Autowired
-    public FilmService(@Qualifier("filmStorage")FilmStorage filmStorage,
-                       @Qualifier("userStorage")UserStorage userStorage,
+    public FilmService(@Qualifier("filmStorage") FilmStorage filmStorage,
+                       @Qualifier("userStorage") UserStorage userStorage,
                        MpaRatingStorage mpaRatingStorage,
                        GenreStorage genreStorage) {
         this.filmStorage = filmStorage;
@@ -99,7 +99,7 @@ public class FilmService {
             log.error("Пользователь попытался создать новый фильм с длительностью меньше 1 минуты");
             throw new ValidationExceptions("Длительность не может быть меньше 1 минуты");
         }
-        if (newFilm.getMpaRating() != null && !isIdMpa(newFilm.getMpaRating())) {
+        if (newFilm.getMpa() != null && !isIdMpa(newFilm.getMpa())) {
             log.error("Указанный ID возрастного рейтинга отсутствует");
             throw new ValidationExceptions("Указанный ID возрастного рейтинга отсутствует");
         }
@@ -129,9 +129,8 @@ public class FilmService {
         List<Integer> filmGenreIds = film.getGenres().stream().map(Genre::getId).toList();
         for (Integer genreId : filmGenreIds) {
             if (!existingGenreIds.contains(genreId)) {
-                String errorMessage = "Жанр с ID " + genreId + " не существует";
-                log.error(errorMessage);
-                throw new ValidationExceptions(errorMessage);
+                log.error("Жанр с ID {} не существует", genreId);
+                throw new ValidationExceptions(String.format("Жанр с ID {} не существует", genreId));
             }
         }
     }

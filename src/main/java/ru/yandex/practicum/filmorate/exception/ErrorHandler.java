@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ErrorHandler {
     @ExceptionHandler({ValidationExceptions.class, MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleNotValidArgsException(ValidationExceptions e) {
+    public ErrorResponse handleNotValidArgsException(Exception e) {
         log.info("Ошибка валидации: {}", e.getMessage());
         return new ErrorResponse(e.getMessage(), e.getMessage());
     }
 
     @ExceptionHandler({NotFoundExceptions.class, HttpMessageNotReadableException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleNotFoundException(NotFoundExceptions e) {
+    public ErrorResponse handleNotFoundException(Exception e) {
         log.info("Элемент не найден: {}", e.getMessage());
         return new ErrorResponse(e.getMessage(), e.getMessage());
     }

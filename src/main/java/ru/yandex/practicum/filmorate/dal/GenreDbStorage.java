@@ -25,6 +25,6 @@ public class GenreDbStorage extends BaseRepository<Genre> implements GenreStorag
 
     @Override
     public Genre getGenre(Integer id) {
-        return (Genre) findOne(GET_GENRE_ID_QUERY, id);
+        return findOne(GET_GENRE_ID_QUERY, id);
     }
 }

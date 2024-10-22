@@ -30,12 +30,12 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
             "WHERE (user_id = ? AND friend_id = ?)";
     private static final String GET_ALL_FRIENDS_QUERY = "SELECT u.* " +
             "FROM users u " +
-            "JOIN friendship_statuses fs ON u.user_id = fs.friend_id WHERE f.user_id = ?";
+            "JOIN friendship_statuses fs ON u.user_id = fs.friend_id WHERE fs.user_id = ?";
     private static final String GET_COMMON_FRIENDS_QUERY = "SELECT u.* " +
             "FROM users u " +
             "JOIN friendship_statuses fs ON u.user_id = fs.friend_id " +
             "JOIN friendship_statuses fs2 ON u.user_id = fs2.friend_id " +
-            "WHERE f.user_id = ? AND f2.user_id = ?";
+            "WHERE fs.user_id = ? AND fs2.user_id = ?";
 
     public UserDbStorage(JdbcTemplate jdbcTemplate, @Qualifier("userRowMapper") RowMapper mapper) {
         super(jdbcTemplate, mapper);
@@ -43,7 +43,7 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
 
     @Override
     public User findUser(long id) {
-        return (User) findOne(GET_ONE_USER_QUERY, id);
+        return findOne(GET_ONE_USER_QUERY, id);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
     }
 
     @Override
-    public Collection<User> getAllFriends(Long id) {
+    public List<User> getAllFriends(Long id) {
         return findMany(GET_ALL_FRIENDS_QUERY, id);
     }
 
