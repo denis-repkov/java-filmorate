@@ -3,24 +3,35 @@ package ru.yandex.practicum.filmorate.controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import ru.yandex.practicum.filmorate.exception.ValidationExceptions;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @DisplayName("Тестирование контроллера фильмов")
 class FilmControllerTest {
-    private FilmController filmController = new FilmController(new FilmService(new InMemoryFilmStorage(), new InMemoryUserStorage()));
+    @Mock
+    private FilmStorage filmStorage;
+
+    @InjectMocks
+    private FilmService filmService;
+    private FilmController filmController;
     private Film film;
 
     @BeforeEach
     public void beforeEach() {
+        MockitoAnnotations.openMocks(this);
+        filmController = new FilmController(filmService);
+
         film = new Film();
         film.setName("name");
         film.setDescription("description");
@@ -66,7 +77,7 @@ class FilmControllerTest {
     @Test
     @DisplayName("Получение всех фильмов")
     void findAllFilms() {
-        filmController.createFilm(film);
+        when(filmStorage.findAllFilms()).thenReturn(List.of(film));
         List<Film> films = filmController.findAllFilms();
         assertEquals(1, films.size());
         assertEquals(film.getName(), films.get(0).getName());
@@ -75,7 +86,8 @@ class FilmControllerTest {
     @Test
     @DisplayName("Получение фильма по ID")
     void findFilmById() {
-        filmController.createFilm(film);
+        film.setId(1L);
+        when(filmStorage.findFilm(1L)).thenReturn(film);
         Film foundFilm = filmController.findFilm(film.getId());
         assertEquals(film.getName(), foundFilm.getName());
     }
@@ -83,17 +95,20 @@ class FilmControllerTest {
     @Test
     @DisplayName("Обновление фильма")
     void updateFilm() {
-        filmController.createFilm(film);
+        film.setId(1L);
+        when(filmStorage.findFilm(1L)).thenReturn(film);
+        when(filmStorage.updateFilm(film)).thenReturn(film);
         film.setName("Update Name");
-        Film updatedFilm = filmController.updateFilm(film);
+        Film updatedFilm = filmController.updateFilm(filmController.findFilm(film.getId()));
         assertEquals("Update Name", updatedFilm.getName());
     }
 
     @Test
     @DisplayName("Получение популярных фильмов")
     void getPopularFilms() {
-        filmController.createFilm(film);
-        List<Film> popularFilms = filmController.getPopularFilms(10);
+        film.setId(1L);
+        when(filmStorage.getPopularFilms(10L)).thenReturn(List.of(film));
+        List<Film> popularFilms = filmController.getPopularFilms(10L);
         assertEquals(1, popularFilms.size());
         assertEquals(film.getName(), popularFilms.get(0).getName());
     }
