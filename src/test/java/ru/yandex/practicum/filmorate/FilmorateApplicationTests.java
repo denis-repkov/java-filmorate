@@ -94,6 +94,11 @@ class FilmorateApplicationTests {
     }
 
     @Test
+    @DisplayName("Тест с поднятием всего контекста")
+    void contextLoads() {
+    }
+
+    @Test
     @DisplayName("Добавление пользователя и получение его по ID")
     void testCreateAndFindUserById() {
         userService.createUser(firstUser);

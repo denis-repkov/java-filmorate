@@ -88,10 +88,9 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     public List<Film> getPopularFilms(Long count) {
         String query = GET_TOP_FILMS_QUERY;
 
-        if (count != null) {
-            query += " LIMIT " + count;
-        }
-        if (count == null || count < findAllFilms().size()) {
+        query += " LIMIT " + count;
+
+        if (count < findAllFilms().size()) {
             return findMany(query);
         }
         return findMany(GET_TOP_FILMS_QUERY);
